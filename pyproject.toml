@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "recipe-scraper"
+version = "0.1.0"
+description = "Scrape recipes from the web into a local SQLite database."
+readme = "README.MD"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Simon Zheng", email = "simonzheng950@gmail.com" },
+]
+
+keywords = ["recipes", "scraping", "sqlite"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+]
+
+dependencies = [
+    "recipe-scrapers>=15.0",
+    "sqlalchemy>=2.0",
+    "requests>=2.31",
+    "beautifulsoup4>=4.12",
+    "typer>=0.12",
+    "rich>=13.7",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+
+[project.scripts]
+recipe-scraper = "recepie_scraper.main:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+pythonpath = ["src"]
