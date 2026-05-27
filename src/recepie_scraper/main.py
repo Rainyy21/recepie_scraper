@@ -38,5 +38,22 @@ def list():
         console.print(table)
 
 
+@app.command()
+def show(recipe_id: int):
+    """Show a recipe with its ingredients and steps"""
+    with SessionLocal() as session:
+        recipe = session.get(Recipe, recipe_id)
+        if recipe is None:
+            console.print(f"[red]No recipe with id {recipe_id}[/red]")
+            raise typer.Exit(1)
+        console.print(f"[bold]{recipe.title}[/bold]  ({recipe.url})")
+        console.print("\n[bold]Ingredients[/bold]")
+        for ing in sorted(recipe.ingredients, key=lambda i: i.position):
+            console.print(f"  - {ing.text}")
+        console.print("\n[bold]Steps[/bold]")
+        for st in sorted(recipe.steps, key=lambda s: s.position):
+            console.print(f"  {st.position}. {st.text}")
+
+
 if __name__ == "__main__":
     app()
