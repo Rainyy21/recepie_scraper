@@ -4,6 +4,7 @@ from rich.console import Console
 from .db import init_db, SessionLocal
 from .models import Recipe
 from .scraper import scrape_and_save
+from .scaling import scale_ingredient
 
 app = typer.Typer()
 console = Console()
@@ -39,21 +40,28 @@ def list():
 
 
 @app.command()
-def show(recipe_id: int):
-    """Show a recipe with its ingredients and steps"""
+def show(recipe_id: int, scale: float = 1.0):
+    """Show a recipe with its ingredients and steps, optionally scaled."""
     with SessionLocal() as session:
         recipe = session.get(Recipe, recipe_id)
         if recipe is None:
             console.print(f"[red]No recipe with id {recipe_id}[/red]")
             raise typer.Exit(1)
-        console.print(f"[bold]{recipe.title}[/bold]  ({recipe.url})")
+        
+        if scale != 1.0:
+            console.print(f"[bold]{recipe.title}[/bold] (Scaled x{scale})  ({recipe.url})")
+            if recipe.servings:
+                console.print(f"Original Servings: {recipe.servings}")
+        else:
+            console.print(f"[bold]{recipe.title}[/bold]  ({recipe.url})")
+            
         console.print("\n[bold]Ingredients[/bold]")
         for ing in sorted(recipe.ingredients, key=lambda i: i.position):
-            console.print(f"  - {ing.text}")
+            scaled_text = scale_ingredient(ing.text, scale)
+            console.print(f"  - {scaled_text}")
         console.print("\n[bold]Steps[/bold]")
         for st in sorted(recipe.steps, key=lambda s: s.position):
             console.print(f"  {st.position}. {st.text}")
-
 
 if __name__ == "__main__":
     app()

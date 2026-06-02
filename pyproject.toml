@@ -29,6 +29,8 @@ dependencies = [
     "typer>=0.12",
     "rich>=13.7",
     "python-dotenv>=1.0",
+    "pint (>=0.25.3,<0.26.0)",
+    "ingredient-parser-nlp (>=2.7.0,<3.0.0)",
 ]
 
 [project.optional-dependencies]
