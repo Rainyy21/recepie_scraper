@@ -1,0 +1,34 @@
+<article class="recipe-card">
+    {% if recipe.image_url %}
+        <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" loading="lazy">
+    {% else %}
+        <div style="height: 200px; background: var(--card-background); display: flex; align-items: center; justify-content: center; color: var(--muted);">
+            No Image
+        </div>
+    {% endif %}
+    
+    <div class="recipe-card-content">
+        <h3><a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}">{{ recipe.title }}</a></h3>
+        <p>By {{ recipe.author or 'Unknown Author' }}</p>
+        
+        <div class="recipe-card-meta">
+            {% if recipe.servings %}
+                <span>{{ recipe.servings }} servings</span>
+            {% endif %}
+            {% if recipe.total_time %}
+                <span>{{ recipe.total_time }} mins</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="recipe-card-actions">
+        <a href="{{ recipe.url }}" target="_blank" class="btn-text">Original Source</a>
+        <button class="btn btn-danger btn-sm" 
+                hx-delete="/delete/{{ recipe.id }}" 
+                hx-target="closest .recipe-card" 
+                hx-swap="outerHTML" 
+                hx-confirm="Are you sure you want to delete this recipe?">
+            Delete
+        </button>
+    </div>
+</article>

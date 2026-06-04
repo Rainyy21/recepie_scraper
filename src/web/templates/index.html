@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header>
+    <h1>My Recipe Box</h1>
+    <button class="btn btn-primary" onclick="document.getElementById('Add_Recipe').showModal()">
+        <span>+ Add Recipe</span>
+    </button>
+</header>
+
+<div class="search-container">
+    <!-- Live search with HTMX -->
+    <input type="search" 
+           name="q" 
+           placeholder="Search your recipes..." 
+           hx-get="/search"
+           hx-trigger="keyup changed delay:500ms"
+           hx-target="#recipe-results">
+</div>
+
+<dialog id="Add_Recipe">
+    <form hx-post="/add" hx-target="#recipe-results" hx-on::after-request="this.closest('dialog').close(); this.reset()">
+        <h2>Add New Recipe</h2>
+        <p style="color: var(--secondary-text); margin-bottom: var(--space-sm)">Enter the URL of the recipe you want to save.</p>
+        
+        <div class="form-group">
+            <input type="text" name="url" placeholder="https://example.com/recipe" required autofocus>
+        </div>
+
+        <div class="dialog-actions">
+            <button type="button" class="btn" onclick="document.getElementById('Add_Recipe').close()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Recipe</button>
+        </div>
+    </form>
+</dialog>
+
+<section id="recipe-results">
+    {% include "_recipe_list.html" %}
+</section>
+{% endblock %}

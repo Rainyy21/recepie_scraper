@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ recipe.title }} | Recipe Box{% endblock %}
+
+{% block content %}
+<nav>
+  <a class="Home-button" href="{{ url_for('index') }}">
+    <img src="{{ url_for('static', filename='src/home_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg') }}" alt="Home">
+    <span>Back to Gallery</span>
+  </a>
+</nav>
+
+<article class="recipe-detail">
+    <header class="recipe-header">
+        <h1>{{ recipe.title }}</h1>
+        <div class="recipe-info-grid">
+            <div class="info-item">
+                <span class="label">Author</span>
+                <span class="value">{{ recipe.author or 'Unknown' }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Servings</span>
+                <span class="value">{{ recipe.servings or 'N/A' }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Total Time</span>
+                <span class="value">{{ recipe.total_time or 'N/A' }} mins</span>
+            </div>
+        </div>
+    </header>
+
+    {% if recipe.image_url %}
+    <div class="recipe-hero">
+        <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}">
+    </div>
+    {% endif %}
+
+    <div class="recipe-content">
+        <section class="recipe-section">
+            <h3>Ingredients</h3>
+            <ul>
+            {% for ingredient in recipe.ingredients %}
+                <li>{{ ingredient.text }}</li>
+            {% endfor %}
+            </ul>
+        </section>
+
+        <section class="recipe-section">
+            <h3>Instructions</h3>
+            <ol>
+            {% for step in recipe.steps %}
+                <li>{{ step.text }}</li>
+            {% endfor %}
+            </ol>
+        </section>
+    </div>
+
+    <footer style="margin-top: var(--space-lg); padding-top: var(--space-md); border-top: 1px solid var(--muted);">
+        <a href="{{ recipe.url }}" target="_blank" class="btn btn-primary">View Original Website</a>
+    </footer>
+</article>
+
+<style>
+    .recipe-header {
+        margin-bottom: var(--space-lg);
+    }
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .info-item .label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        font-weight: 700;
+    }
+    .info-item .value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--accent-primary);
+    }
+    .recipe-section h3 {
+        font-size: 1.5rem;
+        color: var(--primary-text);
+        margin-bottom: var(--space-md);
+    }
+    .recipe-section li {
+        font-size: 1.05rem;
+        margin-bottom: 0.75rem;
+    }
+</style>
+{% endblock %}
